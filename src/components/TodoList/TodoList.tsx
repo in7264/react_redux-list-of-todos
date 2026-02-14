@@ -20,10 +20,11 @@ export const TodoList: React.FC = () => {
 
   return (
     <>
-      <p className="notification is-warning">
-        There are no todos matching current filter criteria
-      </p>
-
+      {filteredTodos.length === 0 && (
+        <p className="notification is-warning">
+          There are no todos matching current filter criteria
+        </p>
+      )}
       <table className="table is-narrow is-fullwidth">
         <thead>
           <tr>
@@ -42,8 +43,6 @@ export const TodoList: React.FC = () => {
 
         <tbody>
           {filteredTodos.map(todo => {
-            const isCurrent = currentTodo?.id === todo.id;
-
             return (
               <tr key={todo.id} data-cy="todo">
                 <td className="is-vcentered">{todo.id}</td>
@@ -70,14 +69,20 @@ export const TodoList: React.FC = () => {
                     data-cy="selectButton"
                     className="button"
                     type="button"
-                    onClick={() =>
-                      dispatch(currentTodoSlice.actions.setQuery(todo))
-                    }
+                    onClick={() => {
+                      if (currentTodo?.id === todo.id) {
+                        dispatch(currentTodoSlice.actions.clearQuery());
+                      } else {
+                        dispatch(currentTodoSlice.actions.setQuery(todo));
+                      }
+                    }}
                   >
                     <span className="icon">
                       <i
                         className={
-                          isCurrent ? 'far fa-eye-slash' : 'far fa-eye'
+                          currentTodo?.id === todo.id
+                            ? 'far fa-eye-slash'
+                            : 'far fa-eye'
                         }
                       />
                     </span>

@@ -21,7 +21,7 @@ export const filterSlice = createSlice({
       return { ...state, status: action.payload };
     },
     clearQuery(state) {
-      return { ...state, query: '', status: 'all' };
+      return { ...state, query: '' };
     },
   },
 });
